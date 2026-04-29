@@ -2,7 +2,10 @@ import { supabase } from "@/lib/supabase";
 import type { Supplier, SupplierInsert } from "@/types";
 
 export async function getSuppliers(): Promise<Supplier[]> {
-  const { data, error } = await supabase.from("supplier").select("*").order("name");
+  const { data, error } = await supabase
+    .from("supplier")
+    .select("*")
+    .order("name");
   if (error) throw error;
   return data ?? [];
 }

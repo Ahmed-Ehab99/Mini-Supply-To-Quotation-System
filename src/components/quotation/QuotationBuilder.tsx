@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, Check, Plus, Save, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/shared/PageHeader";
@@ -30,18 +34,29 @@ import {
   useQuotationDetail,
   useUpdateQuotation,
 } from "@/hooks/useQuotations";
-import { quotationSchema, type QuotationFormValues } from "@/schemas/quotation.schema";
+import {
+  quotationSchema,
+  type QuotationFormValues,
+} from "@/schemas/quotation.schema";
 import { generateQuotationRef } from "@/lib/format";
 import type { SupplierOfferWithDetails } from "@/types";
 
-export function QuotationBuilder({ quotationId: initialId }: { quotationId?: string }) {
+export function QuotationBuilder({
+  quotationId: initialId,
+}: {
+  quotationId?: string;
+}) {
   const navigate = useNavigate();
-  const [quotationId, setQuotationId] = useState<string | null>(initialId ?? null);
+  const [quotationId, setQuotationId] = useState<string | null>(
+    initialId ?? null,
+  );
   const [addOpen, setAddOpen] = useState(false);
 
   const { data: customers } = useCustomers();
   const { data: locations } = useLocations();
-  const { data: detail, isLoading } = useQuotationDetail(quotationId ?? undefined);
+  const { data: detail, isLoading } = useQuotationDetail(
+    quotationId ?? undefined,
+  );
 
   const createQuot = useCreateQuotation();
   const updateQuot = useUpdateQuotation();
@@ -71,8 +86,10 @@ export function QuotationBuilder({ quotationId: initialId }: { quotationId?: str
     }
   }, [detail, form]);
 
-  const watched = form.watch();
-  const lines = detail?.lines ?? [];
+  const watched = useWatch({
+    control: form.control,
+  });
+  const lines = useMemo(() => detail?.lines ?? [], [detail]);
 
   const totals = useMemo(() => {
     const totalCost = lines.reduce(
@@ -89,8 +106,16 @@ export function QuotationBuilder({ quotationId: initialId }: { quotationId?: str
   }, [lines]);
 
   const saveHeader = (values: QuotationFormValues) => {
-    const payload = {
-      ...values,
+    const payload: {
+      customer_id: string;
+      destination_id: string;
+      reference_number: string;
+      valid_until: string | null;
+      notes: string | null;
+    } = {
+      customer_id: values.customer_id,
+      destination_id: values.destination_id,
+      reference_number: values.reference_number,
       valid_until: values.valid_until || null,
       notes: values.notes || null,
     };
@@ -116,7 +141,9 @@ export function QuotationBuilder({ quotationId: initialId }: { quotationId?: str
         <div className="space-y-6 lg:col-span-3">
           {/* Header form */}
           <Card>
-            <CardHeader><CardTitle className="text-base">Quotation header</CardTitle></CardHeader>
+            <CardHeader>
+              <CardTitle className="text-base">Quotation header</CardTitle>
+            </CardHeader>
             <CardContent>
               <form
                 onSubmit={form.handleSubmit(saveHeader)}
@@ -129,9 +156,14 @@ export function QuotationBuilder({ quotationId: initialId }: { quotationId?: str
                 <div className="space-y-2">
                   <Label>Customer</Label>
                   <ComboboxField
-                    options={(customers ?? []).map((c) => ({ label: c.name, value: c.id }))}
+                    options={(customers ?? []).map((c) => ({
+                      label: c.name,
+                      value: c.id,
+                    }))}
                     value={watched.customer_id}
-                    onChange={(v) => form.setValue("customer_id", v, { shouldValidate: true })}
+                    onChange={(v) =>
+                      form.setValue("customer_id", v, { shouldValidate: true })
+                    }
                     placeholder="Select customer"
                   />
                 </div>
@@ -150,7 +182,9 @@ export function QuotationBuilder({ quotationId: initialId }: { quotationId?: str
                     }))}
                     value={watched.destination_id}
                     onChange={(v) =>
-                      form.setValue("destination_id", v, { shouldValidate: true })
+                      form.setValue("destination_id", v, {
+                        shouldValidate: true,
+                      })
                     }
                     placeholder="Select destination"
                     disabled={!!quotationId && lines.length > 0}
@@ -165,7 +199,10 @@ export function QuotationBuilder({ quotationId: initialId }: { quotationId?: str
                   <Textarea rows={2} {...form.register("notes")} />
                 </div>
                 <div className="sm:col-span-2 flex justify-end">
-                  <Button type="submit" disabled={createQuot.isPending || updateQuot.isPending}>
+                  <Button
+                    type="submit"
+                    disabled={createQuot.isPending || updateQuot.isPending}
+                  >
                     <Save className="mr-2 h-4 w-4" />
                     {quotationId ? "Save header" : "Create & continue"}
                   </Button>
@@ -193,7 +230,8 @@ export function QuotationBuilder({ quotationId: initialId }: { quotationId?: str
                 </p>
               ) : lines.length === 0 ? (
                 <p className="py-6 text-center text-sm text-muted-foreground">
-                  No lines yet. Click <strong>Add line</strong> to compare suppliers and pick one.
+                  No lines yet. Click <strong>Add line</strong> to compare
+                  suppliers and pick one.
                 </p>
               ) : (
                 <ul className="space-y-3">
@@ -204,25 +242,37 @@ export function QuotationBuilder({ quotationId: initialId }: { quotationId?: str
                     >
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="font-semibold">{l.material.name}</span>
+                          <span className="font-semibold">
+                            {l.material.name}
+                          </span>
                           <Badge variant="outline">{l.material.unit}</Badge>
                           <MarginBadge marginPct={Number(l.margin_pct)} />
                         </div>
                         <p className="mt-0.5 text-xs text-muted-foreground">
-                          via <strong>{l.selected_offer.supplier.name}</strong> ·{" "}
-                          {Number(l.quantity)} × <PriceDisplay amount={Number(l.effective_price_snapshot)} /> eff.
+                          via <strong>{l.selected_offer.supplier.name}</strong>{" "}
+                          · {Number(l.quantity)} ×{" "}
+                          <PriceDisplay
+                            amount={Number(l.effective_price_snapshot)}
+                          />{" "}
+                          eff.
                         </p>
                       </div>
                       <div className="flex items-center gap-3">
                         <div className="text-right">
-                          <p className="text-xs text-muted-foreground">Sell @</p>
+                          <p className="text-xs text-muted-foreground">
+                            Sell @
+                          </p>
                           <p className="font-semibold">
                             <PriceDisplay amount={Number(l.selling_price)} />
                           </p>
                         </div>
                         <ConfirmDialog
                           trigger={
-                            <Button variant="ghost" size="icon" className="text-destructive">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-destructive"
+                            >
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           }
@@ -241,12 +291,16 @@ export function QuotationBuilder({ quotationId: initialId }: { quotationId?: str
         {/* Summary */}
         <div className="lg:col-span-2">
           <Card className="sticky top-6">
-            <CardHeader><CardTitle className="text-base">Summary</CardTitle></CardHeader>
+            <CardHeader>
+              <CardTitle className="text-base">Summary</CardTitle>
+            </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-1 text-sm">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Lines</span>
-                  <span className="font-medium tabular-nums">{lines.length}</span>
+                  <span className="font-medium tabular-nums">
+                    {lines.length}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Total cost</span>
@@ -271,7 +325,10 @@ export function QuotationBuilder({ quotationId: initialId }: { quotationId?: str
                       { id: quotationId, data: { status: "sent" } },
                       {
                         onSuccess: () =>
-                          navigate({ to: "/quotations/$id", params: { id: quotationId } }),
+                          navigate({
+                            to: "/quotations/$id",
+                            params: { id: quotationId },
+                          }),
                       },
                     );
                   }}
@@ -288,7 +345,7 @@ export function QuotationBuilder({ quotationId: initialId }: { quotationId?: str
         open={addOpen}
         onOpenChange={setAddOpen}
         quotationId={quotationId}
-        destinationId={watched.destination_id}
+        destinationId={watched.destination_id ?? ""}
         onAdded={() => setAddOpen(false)}
         addLine={addLine.mutate}
       />
@@ -309,24 +366,31 @@ function AddLineDialog({
   quotationId: string | null;
   destinationId: string;
   onAdded: () => void;
-  addLine: (data: Parameters<ReturnType<typeof useAddQuotationLine>["mutate"]>[0]) => void;
+  addLine: (
+    data: Parameters<ReturnType<typeof useAddQuotationLine>["mutate"]>[0],
+  ) => void;
 }) {
   const { data: materials } = useMaterials();
   const [materialId, setMaterialId] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
   const [sellingPrice, setSellingPrice] = useState<number>(0);
-  const [selected, setSelected] = useState<SupplierOfferWithDetails | null>(null);
+  const [selected, setSelected] = useState<SupplierOfferWithDetails | null>(
+    null,
+  );
   const [notes, setNotes] = useState("");
 
-  useEffect(() => {
-    if (!open) {
-      setMaterialId("");
-      setQuantity(1);
-      setSellingPrice(0);
-      setSelected(null);
-      setNotes("");
-    }
-  }, [open]);
+  const resetState = () => {
+    setMaterialId("");
+    setQuantity(1);
+    setSellingPrice(0);
+    setSelected(null);
+    setNotes("");
+  };
+
+  const handleOpenChange = (value: boolean) => {
+    if (!value) resetState();
+    onOpenChange(value);
+  };
 
   const { data: offers, isLoading } = useSupplierComparison(
     materialId || null,
@@ -335,7 +399,8 @@ function AddLineDialog({
 
   const margin =
     selected && sellingPrice > 0
-      ? ((sellingPrice - selected.effective_price) / selected.effective_price) * 100
+      ? ((sellingPrice - selected.effective_price) / selected.effective_price) *
+        100
       : 0;
 
   const canSave =
@@ -360,7 +425,7 @@ function AddLineDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-3xl">
         <DialogHeader>
           <DialogTitle>Add material line</DialogTitle>
@@ -371,17 +436,24 @@ function AddLineDialog({
               <Label>Material</Label>
               <ComboboxField
                 options={(materials ?? []).map((m) => ({
-                  label: m.name, value: m.id, hint: m.unit,
+                  label: m.name,
+                  value: m.id,
+                  hint: m.unit,
                 }))}
                 value={materialId}
-                onChange={(v) => { setMaterialId(v); setSelected(null); }}
+                onChange={(v) => {
+                  setMaterialId(v);
+                  setSelected(null);
+                }}
                 placeholder="Select material"
               />
             </div>
             <div className="space-y-2">
               <Label>Quantity</Label>
               <Input
-                type="number" min="0" step="0.0001"
+                type="number"
+                min="0"
+                step="0.0001"
                 value={quantity}
                 onChange={(e) => setQuantity(Number(e.target.value))}
               />
@@ -392,7 +464,9 @@ function AddLineDialog({
             <div className="space-y-2">
               <Label>Supplier comparison (sorted by effective price)</Label>
               {isLoading ? (
-                <p className="py-6 text-center text-sm text-muted-foreground">Loading…</p>
+                <p className="py-6 text-center text-sm text-muted-foreground">
+                  Loading…
+                </p>
               ) : (
                 <ComparisonTable
                   offers={offers ?? []}
@@ -408,12 +482,15 @@ function AddLineDialog({
               <div className="space-y-2">
                 <Label>Selling price (per unit)</Label>
                 <Input
-                  type="number" min="0" step="0.0001"
+                  type="number"
+                  min="0"
+                  step="0.0001"
                   value={sellingPrice || ""}
                   onChange={(e) => setSellingPrice(Number(e.target.value))}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Cost: <PriceDisplay amount={selected.effective_price} /> · Margin:{" "}
+                  Cost: <PriceDisplay amount={selected.effective_price} /> ·
+                  Margin:{" "}
                   <span
                     className={
                       margin >= 20
@@ -429,13 +506,18 @@ function AddLineDialog({
               </div>
               <div className="space-y-2">
                 <Label>Selection notes</Label>
-                <Input value={notes} onChange={(e) => setNotes(e.target.value)} />
+                <Input
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                />
               </div>
             </div>
           )}
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
+            Cancel
+          </Button>
           <Button onClick={handleSave} disabled={!canSave}>
             <Check className="mr-2 h-4 w-4" /> Add to quotation
           </Button>

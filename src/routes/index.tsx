@@ -3,7 +3,14 @@ import { motion } from "framer-motion";
 import { FileText, Package, PlusCircle, Tag } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { useMaterials } from "@/hooks/useMaterials";
@@ -15,7 +22,10 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Dashboard — SupplyQ" },
-      { name: "description", content: "Overview of materials, offers, and quotations." },
+      {
+        name: "description",
+        content: "Overview of materials, offers, and quotations.",
+      },
     ],
   }),
   component: DashboardPage,
@@ -48,11 +58,15 @@ function StatCard({
     >
       <Card className="rounded-xl">
         <CardContent className="flex items-center gap-4 p-5">
-          <div className={`flex h-11 w-11 items-center justify-center rounded-lg ${tones[tone]}`}>
+          <div
+            className={`flex h-11 w-11 items-center justify-center rounded-lg ${tones[tone]}`}
+          >
             <Icon className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-xs uppercase tracking-wide text-muted-foreground">{label}</p>
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">
+              {label}
+            </p>
             <p className="text-2xl font-bold tabular-nums">{value}</p>
           </div>
         </CardContent>
@@ -78,10 +92,34 @@ function DashboardPage() {
       />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Materials" value={materials?.length ?? 0} icon={Package} delay={0} tone="indigo" />
-        <StatCard label="Active Offers" value={offers?.length ?? 0} icon={Tag} delay={0.05} tone="emerald" />
-        <StatCard label="Draft Quotations" value={drafts} icon={FileText} delay={0.1} tone="amber" />
-        <StatCard label="Sent Quotations" value={sent} icon={FileText} delay={0.15} tone="rose" />
+        <StatCard
+          label="Materials"
+          value={materials?.length ?? 0}
+          icon={Package}
+          delay={0}
+          tone="indigo"
+        />
+        <StatCard
+          label="Active Offers"
+          value={offers?.length ?? 0}
+          icon={Tag}
+          delay={0.05}
+          tone="emerald"
+        />
+        <StatCard
+          label="Draft Quotations"
+          value={drafts}
+          icon={FileText}
+          delay={0.1}
+          tone="amber"
+        />
+        <StatCard
+          label="Sent Quotations"
+          value={sent}
+          icon={FileText}
+          delay={0.15}
+          tone="rose"
+        />
       </div>
 
       <div className="mt-6 flex flex-wrap gap-2">
@@ -124,12 +162,20 @@ function DashboardPage() {
               <TableBody>
                 {recent.map((q) => (
                   <TableRow key={q.id}>
-                    <TableCell className="font-medium">{q.reference_number}</TableCell>
-                    <TableCell><StatusBadge status={q.status} /></TableCell>
-                    <TableCell className="text-muted-foreground">{formatDate(q.created_at)}</TableCell>
+                    <TableCell className="font-medium">
+                      {q.reference_number}
+                    </TableCell>
+                    <TableCell>
+                      <StatusBadge status={q.status} />
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {formatDate(q.created_at)}
+                    </TableCell>
                     <TableCell className="text-right">
                       <Button asChild variant="ghost" size="sm">
-                        <Link to="/quotations/$id" params={{ id: q.id }}>Open</Link>
+                        <Link to="/quotations/$id" params={{ id: q.id }}>
+                          Open
+                        </Link>
                       </Button>
                     </TableCell>
                   </TableRow>

@@ -4,10 +4,18 @@ import { FileText, MoreHorizontal, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { EmptyState } from "@/components/shared/EmptyState";
@@ -29,8 +37,14 @@ function QuotationsListPage() {
   const { data: locations } = useLocations();
   const del = useDeleteQuotation();
 
-  const cMap = useMemo(() => new Map((customers ?? []).map((c) => [c.id, c])), [customers]);
-  const lMap = useMemo(() => new Map((locations ?? []).map((l) => [l.id, l])), [locations]);
+  const cMap = useMemo(
+    () => new Map((customers ?? []).map((c) => [c.id, c])),
+    [customers],
+  );
+  const lMap = useMemo(
+    () => new Map((locations ?? []).map((l) => [l.id, l])),
+    [locations],
+  );
 
   return (
     <div>
@@ -39,19 +53,28 @@ function QuotationsListPage() {
         description="All draft and sent quotations."
         actions={
           <Button asChild>
-            <Link to="/quotations/new"><Plus className="mr-2 h-4 w-4" /> New Quotation</Link>
+            <Link to="/quotations/new">
+              <Plus className="mr-2 h-4 w-4" /> New Quotation
+            </Link>
           </Button>
         }
       />
       <Card className="p-4">
         {isLoading ? (
-          <p className="py-12 text-center text-sm text-muted-foreground">Loading…</p>
+          <p className="py-12 text-center text-sm text-muted-foreground">
+            Loading…
+          </p>
         ) : !data || data.length === 0 ? (
           <EmptyState
             icon={FileText}
             title="No quotations yet"
             description="Create your first quotation to compare suppliers and price for your customer."
-            action={{ label: "New Quotation", onClick: () => { window.location.href = "/quotations/new"; } }}
+            action={{
+              label: "New Quotation",
+              onClick: () => {
+                window.location.href = "/quotations/new";
+              },
+            }}
           />
         ) : (
           <Table>
@@ -67,29 +90,49 @@ function QuotationsListPage() {
             </TableHeader>
             <TableBody>
               {data.map((q) => (
-                <TableRow key={q.id} className="cursor-pointer hover:bg-accent/40">
+                <TableRow
+                  key={q.id}
+                  className="cursor-pointer hover:bg-accent/40"
+                >
                   <TableCell className="font-medium">
-                    <Link to="/quotations/$id" params={{ id: q.id }}>{q.reference_number}</Link>
+                    <Link to="/quotations/$id" params={{ id: q.id }}>
+                      {q.reference_number}
+                    </Link>
                   </TableCell>
                   <TableCell>{cMap.get(q.customer_id)?.name ?? "—"}</TableCell>
-                  <TableCell className="text-muted-foreground">{lMap.get(q.destination_id)?.name ?? "—"}</TableCell>
-                  <TableCell><StatusBadge status={q.status} /></TableCell>
-                  <TableCell className="text-muted-foreground">{formatDate(q.created_at)}</TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {lMap.get(q.destination_id)?.name ?? "—"}
+                  </TableCell>
+                  <TableCell>
+                    <StatusBadge status={q.status} />
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {formatDate(q.created_at)}
+                  </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="icon">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem asChild>
-                          <Link to="/quotations/$id" params={{ id: q.id }}>Open</Link>
+                          <Link to="/quotations/$id" params={{ id: q.id }}>
+                            Open
+                          </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link to="/quotations/$id/edit" params={{ id: q.id }}>Edit</Link>
+                          <Link to="/quotations/$id/edit" params={{ id: q.id }}>
+                            Edit
+                          </Link>
                         </DropdownMenuItem>
                         <ConfirmDialog
                           trigger={
-                            <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-destructive">
+                            <DropdownMenuItem
+                              onSelect={(e) => e.preventDefault()}
+                              className="text-destructive"
+                            >
                               <Trash2 className="mr-2 h-4 w-4" /> Delete
                             </DropdownMenuItem>
                           }

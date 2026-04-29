@@ -8,7 +8,11 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -48,7 +52,9 @@ export function ComboboxField({
             !selected && "text-muted-foreground",
           )}
         >
-          <span className="truncate">{selected ? selected.label : placeholder}</span>
+          <span className="truncate">
+            {selected ? selected.label : placeholder}
+          </span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

@@ -110,7 +110,9 @@ function SidebarContent({ collapsed }: { collapsed: boolean }) {
                       title={collapsed ? item.label : undefined}
                     >
                       <Icon className="h-4 w-4 shrink-0" />
-                      {!collapsed && <span className="truncate">{item.label}</span>}
+                      {!collapsed && (
+                        <span className="truncate">{item.label}</span>
+                      )}
                     </Link>
                   </li>
                 );

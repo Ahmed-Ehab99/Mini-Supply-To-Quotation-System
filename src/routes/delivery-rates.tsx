@@ -9,21 +9,34 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle,
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
 } from "@/components/ui/sheet";
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { PriceDisplay } from "@/components/shared/PriceDisplay";
 import {
-  useDeleteDeliveryRate, useDeliveryRates, useUpsertDeliveryRate,
+  useDeleteDeliveryRate,
+  useDeliveryRates,
+  useUpsertDeliveryRate,
 } from "@/hooks/useDeliveryRates";
 import { useSuppliers } from "@/hooks/useSuppliers";
 import { useLocations } from "@/hooks/useLocations";
-import { deliveryRateSchema, type DeliveryRateFormValues } from "@/schemas/delivery-rate.schema";
+import {
+  deliveryRateSchema,
+  type DeliveryRateFormValues,
+} from "@/schemas/delivery-rate.schema";
 import type { DeliveryRate, IncotermType } from "@/types";
 
 export const Route = createFileRoute("/delivery-rates")({
@@ -32,7 +45,17 @@ export const Route = createFileRoute("/delivery-rates")({
 });
 
 const INCOTERMS: IncotermType[] = [
-  "EXW", "FCA", "CPT", "CIP", "DAP", "DPU", "DDP", "FAS", "FOB", "CFR", "CIF",
+  "EXW",
+  "FCA",
+  "CPT",
+  "CIP",
+  "DAP",
+  "DPU",
+  "DDP",
+  "FAS",
+  "FOB",
+  "CFR",
+  "CIF",
 ];
 
 interface CellState {
@@ -58,7 +81,8 @@ function DeliveryRatesPage() {
     return m;
   }, [rates]);
 
-  const noData = (suppliers?.length ?? 0) === 0 || (locations?.length ?? 0) === 0;
+  const noData =
+    (suppliers?.length ?? 0) === 0 || (locations?.length ?? 0) === 0;
 
   return (
     <div>
@@ -67,7 +91,9 @@ function DeliveryRatesPage() {
         description="Cost per unit to ship from each supplier to each destination. Empty cells = no rate on file."
       />
       {isLoading ? (
-        <p className="py-12 text-center text-sm text-muted-foreground">Loading…</p>
+        <p className="py-12 text-center text-sm text-muted-foreground">
+          Loading…
+        </p>
       ) : noData ? (
         <EmptyState
           icon={Truck}
@@ -83,9 +109,14 @@ function DeliveryRatesPage() {
                   Supplier ↓ / Destination →
                 </th>
                 {(locations ?? []).map((l) => (
-                  <th key={l.id} className="min-w-[140px] p-3 text-left font-medium">
+                  <th
+                    key={l.id}
+                    className="min-w-[140px] p-3 text-left font-medium"
+                  >
                     <div className="truncate">{l.name}</div>
-                    <div className="text-xs font-normal text-muted-foreground">{l.city}</div>
+                    <div className="text-xs font-normal text-muted-foreground">
+                      {l.city}
+                    </div>
                   </th>
                 ))}
               </tr>
@@ -119,11 +150,15 @@ function DeliveryRatesPage() {
                           {r ? (
                             <>
                               <div className="font-medium text-foreground">
-                                <PriceDisplay amount={Number(r.cost_per_unit)} />
+                                <PriceDisplay
+                                  amount={Number(r.cost_per_unit)}
+                                />
                               </div>
                               <div className="text-xs text-muted-foreground">
                                 {r.incoterm ?? ""}
-                                {r.lead_time_days ? ` · ${r.lead_time_days}d` : ""}
+                                {r.lead_time_days
+                                  ? ` · ${r.lead_time_days}d`
+                                  : ""}
                               </div>
                             </>
                           ) : (
@@ -166,7 +201,10 @@ function DeliveryRatesPage() {
 }
 
 function RateSheet({
-  cell, onClose, onSubmit, onDelete,
+  cell,
+  onClose,
+  onSubmit,
+  onDelete,
 }: {
   cell: CellState | null;
   onClose: () => void;
@@ -185,8 +223,12 @@ function RateSheet({
           notes: cell.rate?.notes ?? "",
         }
       : {
-          supplier_id: "", location_id: "", cost_per_unit: 0,
-          lead_time_days: undefined, incoterm: undefined, notes: "",
+          supplier_id: "",
+          location_id: "",
+          cost_per_unit: 0,
+          lead_time_days: undefined,
+          incoterm: undefined,
+          notes: "",
         },
   });
 
@@ -197,8 +239,13 @@ function RateSheet({
           <SheetTitle>Delivery rate</SheetTitle>
           {cell && (
             <p className="text-sm text-muted-foreground">
-              <span className="font-medium text-foreground">{cell.supplierName}</span> →{" "}
-              <span className="font-medium text-foreground">{cell.locationName}</span>
+              <span className="font-medium text-foreground">
+                {cell.supplierName}
+              </span>{" "}
+              →{" "}
+              <span className="font-medium text-foreground">
+                {cell.locationName}
+              </span>
             </p>
           )}
         </SheetHeader>
@@ -206,30 +253,47 @@ function RateSheet({
           <div className="space-y-2">
             <Label>Cost per unit</Label>
             <Input
-              type="number" step="0.0001" min="0"
+              type="number"
+              step="0.0001"
+              min="0"
               {...form.register("cost_per_unit", { valueAsNumber: true })}
             />
             {form.formState.errors.cost_per_unit && (
-              <p className="text-xs text-destructive">{form.formState.errors.cost_per_unit.message}</p>
+              <p className="text-xs text-destructive">
+                {form.formState.errors.cost_per_unit.message}
+              </p>
             )}
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
               <Label>Lead time (days)</Label>
               <Input
-                type="number" min="1"
-                {...form.register("lead_time_days", { valueAsNumber: true, setValueAs: (v) => (v === "" || Number.isNaN(v) ? undefined : Number(v)) })}
+                type="number"
+                min="1"
+                {...form.register("lead_time_days", {
+                  valueAsNumber: true,
+                  setValueAs: (v) =>
+                    v === "" || Number.isNaN(v) ? undefined : Number(v),
+                })}
               />
             </div>
             <div className="space-y-2">
               <Label>Incoterm</Label>
               <Select
                 value={form.watch("incoterm") ?? ""}
-                onValueChange={(v) => form.setValue("incoterm", v as IncotermType)}
+                onValueChange={(v) =>
+                  form.setValue("incoterm", v as IncotermType)
+                }
               >
-                <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
+                <SelectTrigger>
+                  <SelectValue placeholder="—" />
+                </SelectTrigger>
                 <SelectContent>
-                  {INCOTERMS.map((i) => <SelectItem key={i} value={i}>{i}</SelectItem>)}
+                  {INCOTERMS.map((i) => (
+                    <SelectItem key={i} value={i}>
+                      {i}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -242,7 +306,11 @@ function RateSheet({
             {cell?.rate && (
               <ConfirmDialog
                 trigger={
-                  <Button type="button" variant="outline" className="text-destructive">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="text-destructive"
+                  >
                     <Trash2 className="mr-2 h-4 w-4" /> Delete rate
                   </Button>
                 }
@@ -251,7 +319,9 @@ function RateSheet({
               />
             )}
             <div className="flex gap-2">
-              <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
+              <Button type="button" variant="outline" onClick={onClose}>
+                Cancel
+              </Button>
               <Button type="submit">Save</Button>
             </div>
           </SheetFooter>

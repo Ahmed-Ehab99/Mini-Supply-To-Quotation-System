@@ -41,7 +41,9 @@ export async function getQuotationWithDetails(
   return data as unknown as QuotationWithDetails;
 }
 
-export async function createQuotation(data: QuotationInsert): Promise<Quotation> {
+export async function createQuotation(
+  data: QuotationInsert,
+): Promise<Quotation> {
   const { data: row, error } = await supabase
     .from("quotation")
     .insert(data)

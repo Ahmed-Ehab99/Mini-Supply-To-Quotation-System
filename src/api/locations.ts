@@ -2,7 +2,10 @@ import { supabase } from "@/lib/supabase";
 import type { Location, LocationInsert } from "@/types";
 
 export async function getLocations(): Promise<Location[]> {
-  const { data, error } = await supabase.from("location").select("*").order("name");
+  const { data, error } = await supabase
+    .from("location")
+    .select("*")
+    .order("name");
   if (error) throw error;
   return data ?? [];
 }

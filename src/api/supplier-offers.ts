@@ -7,7 +7,9 @@ export interface OfferFilters {
   status?: OfferStatus;
 }
 
-export async function getOffers(filters?: OfferFilters): Promise<SupplierOffer[]> {
+export async function getOffers(
+  filters?: OfferFilters,
+): Promise<SupplierOffer[]> {
   let q = supabase
     .from("supplier_offer")
     .select("*")
@@ -20,7 +22,9 @@ export async function getOffers(filters?: OfferFilters): Promise<SupplierOffer[]
   return data ?? [];
 }
 
-export async function getOffersForMaterial(materialId: string): Promise<SupplierOffer[]> {
+export async function getOffersForMaterial(
+  materialId: string,
+): Promise<SupplierOffer[]> {
   const { data, error } = await supabase
     .from("supplier_offer")
     .select("*")
@@ -30,7 +34,9 @@ export async function getOffersForMaterial(materialId: string): Promise<Supplier
   return data ?? [];
 }
 
-export async function createOffer(data: SupplierOfferInsert): Promise<SupplierOffer> {
+export async function createOffer(
+  data: SupplierOfferInsert,
+): Promise<SupplierOffer> {
   const { data: row, error } = await supabase
     .from("supplier_offer")
     .insert(data)

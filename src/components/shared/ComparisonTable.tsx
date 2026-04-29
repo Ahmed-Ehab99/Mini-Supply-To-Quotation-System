@@ -75,7 +75,10 @@ export function ComparisonTable({
                   </div>
                 </td>
                 <td className="p-3 text-right">
-                  <PriceDisplay amount={Number(o.unit_price)} currency={o.currency} />
+                  <PriceDisplay
+                    amount={Number(o.unit_price)}
+                    currency={o.currency}
+                  />
                 </td>
                 <td className="p-3 text-right">
                   {noRate ? (
@@ -90,7 +93,9 @@ export function ComparisonTable({
                   <PriceDisplay amount={o.effective_price} emphasize />
                 </td>
                 <td className="p-3 text-muted-foreground">
-                  {o.delivery_rate?.lead_time_days ? `${o.delivery_rate.lead_time_days}d` : "—"}
+                  {o.delivery_rate?.lead_time_days
+                    ? `${o.delivery_rate.lead_time_days}d`
+                    : "—"}
                 </td>
                 <td className="p-3 text-muted-foreground">
                   {o.delivery_rate?.incoterm ?? "—"}

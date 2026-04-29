@@ -2,22 +2,45 @@ import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertTriangle, MoreHorizontal, Pencil, Plus, Tag, Trash2 } from "lucide-react";
+import {
+  AlertTriangle,
+  MoreHorizontal,
+  Pencil,
+  Plus,
+  Tag,
+  Trash2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import {
-  Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle,
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
 } from "@/components/ui/sheet";
 import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { PageHeader } from "@/components/shared/PageHeader";
@@ -26,12 +49,15 @@ import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { PriceDisplay } from "@/components/shared/PriceDisplay";
 import {
-  useDeleteOffer, useSupplierOffers, useUpdateOffer,
+  useDeleteOffer,
+  useSupplierOffers,
+  useUpdateOffer,
 } from "@/hooks/useSupplierOffers";
 import { useMaterials } from "@/hooks/useMaterials";
 import { useSuppliers } from "@/hooks/useSuppliers";
 import {
-  supplierOfferSchema, type SupplierOfferFormValues,
+  supplierOfferSchema,
+  type SupplierOfferFormValues,
 } from "@/schemas/supplier-offer.schema";
 import { formatDate } from "@/lib/format";
 import type { OfferStatus, SupplierOffer } from "@/types";
@@ -82,7 +108,9 @@ function SupplierOffersPage() {
         description="Active prices from your suppliers."
         actions={
           <Button asChild>
-            <Link to="/offers/new"><Plus className="mr-2 h-4 w-4" /> New Offer</Link>
+            <Link to="/offers/new">
+              <Plus className="mr-2 h-4 w-4" /> New Offer
+            </Link>
           </Button>
         }
       />
@@ -90,7 +118,9 @@ function SupplierOffersPage() {
       <Card className="p-4">
         <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger><SelectValue placeholder="Status" /></SelectTrigger>
+            <SelectTrigger>
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All statuses</SelectItem>
               <SelectItem value="active">Active</SelectItem>
@@ -99,33 +129,48 @@ function SupplierOffersPage() {
             </SelectContent>
           </Select>
           <Select value={matFilter} onValueChange={setMatFilter}>
-            <SelectTrigger><SelectValue placeholder="Material" /></SelectTrigger>
+            <SelectTrigger>
+              <SelectValue placeholder="Material" />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All materials</SelectItem>
               {(materials ?? []).map((m) => (
-                <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>
+                <SelectItem key={m.id} value={m.id}>
+                  {m.name}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
           <Select value={supFilter} onValueChange={setSupFilter}>
-            <SelectTrigger><SelectValue placeholder="Supplier" /></SelectTrigger>
+            <SelectTrigger>
+              <SelectValue placeholder="Supplier" />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All suppliers</SelectItem>
               {(suppliers ?? []).map((s) => (
-                <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+                <SelectItem key={s.id} value={s.id}>
+                  {s.name}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
 
         {isLoading ? (
-          <p className="py-12 text-center text-sm text-muted-foreground">Loading…</p>
+          <p className="py-12 text-center text-sm text-muted-foreground">
+            Loading…
+          </p>
         ) : filtered.length === 0 ? (
           <EmptyState
             icon={Tag}
             title="No offers"
             description="Create your first supplier offer."
-            action={{ label: "New Offer", onClick: () => { window.location.href = "/offers/new"; } }}
+            action={{
+              label: "New Offer",
+              onClick: () => {
+                window.location.href = "/offers/new";
+              },
+            }}
           />
         ) : (
           <Table>
@@ -144,26 +189,43 @@ function SupplierOffersPage() {
               {filtered.map((o) => {
                 const expiring = isExpiringSoon(o.valid_until);
                 return (
-                  <TableRow key={o.id} className={expiring ? "bg-amber-500/5" : ""}>
+                  <TableRow
+                    key={o.id}
+                    className={expiring ? "bg-amber-500/5" : ""}
+                  >
                     <TableCell className="font-medium">
                       {matMap.get(o.material_id)?.name ?? "—"}
                     </TableCell>
-                    <TableCell>{supMap.get(o.supplier_id)?.name ?? "—"}</TableCell>
-                    <TableCell className="text-right">
-                      <PriceDisplay amount={Number(o.unit_price)} currency={o.currency} emphasize />
+                    <TableCell>
+                      {supMap.get(o.supplier_id)?.name ?? "—"}
                     </TableCell>
-                    <TableCell className="text-muted-foreground">{formatDate(o.valid_from)}</TableCell>
+                    <TableCell className="text-right">
+                      <PriceDisplay
+                        amount={Number(o.unit_price)}
+                        currency={o.currency}
+                        emphasize
+                      />
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {formatDate(o.valid_from)}
+                    </TableCell>
                     <TableCell className="text-muted-foreground">
                       <div className="flex items-center gap-1.5">
-                        {expiring && <AlertTriangle className="h-3.5 w-3.5 text-amber-600" />}
+                        {expiring && (
+                          <AlertTriangle className="h-3.5 w-3.5 text-amber-600" />
+                        )}
                         {formatDate(o.valid_until)}
                       </div>
                     </TableCell>
-                    <TableCell><StatusBadge status={o.status} /></TableCell>
+                    <TableCell>
+                      <StatusBadge status={o.status} />
+                    </TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
+                          <Button variant="ghost" size="icon">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => setEditing(o)}>
@@ -171,7 +233,10 @@ function SupplierOffersPage() {
                           </DropdownMenuItem>
                           <ConfirmDialog
                             trigger={
-                              <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-destructive">
+                              <DropdownMenuItem
+                                onSelect={(e) => e.preventDefault()}
+                                className="text-destructive"
+                              >
                                 <Trash2 className="mr-2 h-4 w-4" /> Delete
                               </DropdownMenuItem>
                             }
@@ -212,7 +277,9 @@ function SupplierOffersPage() {
 }
 
 function EditOfferSheet({
-  offer, onClose, onSubmit,
+  offer,
+  onClose,
+  onSubmit,
 }: {
   offer: SupplierOffer | null;
   onClose: () => void;
@@ -232,8 +299,14 @@ function EditOfferSheet({
           notes: offer.notes ?? "",
         }
       : {
-          material_id: "", supplier_id: "", unit_price: 0, currency: "USD",
-          valid_from: "", valid_until: "", status: "active", notes: "",
+          material_id: "",
+          supplier_id: "",
+          unit_price: 0,
+          currency: "USD",
+          valid_from: "",
+          valid_until: "",
+          status: "active",
+          notes: "",
         },
   });
   return (
@@ -247,7 +320,8 @@ function EditOfferSheet({
             <div className="space-y-2">
               <Label>Unit price</Label>
               <Input
-                type="number" step="0.0001"
+                type="number"
+                step="0.0001"
                 {...form.register("unit_price", { valueAsNumber: true })}
               />
             </div>
@@ -272,7 +346,9 @@ function EditOfferSheet({
               value={form.watch("status")}
               onValueChange={(v) => form.setValue("status", v as OfferStatus)}
             >
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="active">Active</SelectItem>
                 <SelectItem value="expired">Expired</SelectItem>
@@ -285,7 +361,9 @@ function EditOfferSheet({
             <Textarea rows={3} {...form.register("notes")} />
           </div>
           <SheetFooter>
-            <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
+            <Button type="button" variant="outline" onClick={onClose}>
+              Cancel
+            </Button>
             <Button type="submit">Save</Button>
           </SheetFooter>
         </form>

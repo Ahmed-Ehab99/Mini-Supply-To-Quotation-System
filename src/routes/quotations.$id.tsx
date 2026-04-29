@@ -3,10 +3,20 @@ import { ArrowLeft, Pencil, Printer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
-  Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { StatusBadge } from "@/components/shared/StatusBadge";
@@ -43,10 +53,15 @@ function QuotationDetailPage() {
               <Select
                 value={data.status}
                 onValueChange={(v) =>
-                  update.mutate({ id: data.id, data: { status: v as QuotationStatus } })
+                  update.mutate({
+                    id: data.id,
+                    data: { status: v as QuotationStatus },
+                  })
                 }
               >
-                <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
+                <SelectTrigger className="w-36">
+                  <SelectValue />
+                </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="draft">Draft</SelectItem>
                   <SelectItem value="sent">Sent</SelectItem>
@@ -64,7 +79,9 @@ function QuotationDetailPage() {
                 <Printer className="mr-2 h-4 w-4" /> Print
               </Button>
               <Button asChild variant="ghost">
-                <Link to="/quotations"><ArrowLeft className="mr-2 h-4 w-4" /> Back</Link>
+                <Link to="/quotations">
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                </Link>
               </Button>
             </div>
           }
@@ -81,12 +98,16 @@ function QuotationDetailPage() {
                 </div>
                 <div>
                   <p className="text-lg font-bold tracking-tight">SupplyQ</p>
-                  <p className="text-xs text-muted-foreground">Commercial Quotation</p>
+                  <p className="text-xs text-muted-foreground">
+                    Commercial Quotation
+                  </p>
                 </div>
               </div>
             </div>
             <div className="text-right text-sm">
-              <p className="text-xs uppercase tracking-wide text-muted-foreground">Reference</p>
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                Reference
+              </p>
               <p className="text-base font-semibold">{data.reference_number}</p>
               <p className="mt-1 text-xs text-muted-foreground">
                 Issued {formatDate(data.created_at)}
@@ -104,14 +125,20 @@ function QuotationDetailPage() {
 
           <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div>
-              <p className="text-xs uppercase tracking-wide text-muted-foreground">Customer</p>
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                Customer
+              </p>
               <p className="text-base font-semibold">{data.customer.name}</p>
               {data.customer.country && (
-                <p className="text-sm text-muted-foreground">{data.customer.country}</p>
+                <p className="text-sm text-muted-foreground">
+                  {data.customer.country}
+                </p>
               )}
             </div>
             <div>
-              <p className="text-xs uppercase tracking-wide text-muted-foreground">Delivery to</p>
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                Delivery to
+              </p>
               <p className="text-base font-semibold">{data.destination.name}</p>
               <p className="text-sm text-muted-foreground">
                 {data.destination.city}, {data.destination.country}
@@ -132,9 +159,15 @@ function QuotationDetailPage() {
             <TableBody>
               {data.lines.map((l) => (
                 <TableRow key={l.id}>
-                  <TableCell className="font-medium">{l.material.name}</TableCell>
-                  <TableCell className="text-muted-foreground">{l.material.unit}</TableCell>
-                  <TableCell className="text-right tabular-nums">{Number(l.quantity)}</TableCell>
+                  <TableCell className="font-medium">
+                    {l.material.name}
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {l.material.unit}
+                  </TableCell>
+                  <TableCell className="text-right tabular-nums">
+                    {Number(l.quantity)}
+                  </TableCell>
                   <TableCell className="text-right">
                     <PriceDisplay amount={Number(l.selling_price)} />
                   </TableCell>
@@ -149,7 +182,9 @@ function QuotationDetailPage() {
             </TableBody>
             <TableFooter>
               <TableRow>
-                <TableCell colSpan={4} className="text-right font-semibold">Subtotal</TableCell>
+                <TableCell colSpan={4} className="text-right font-semibold">
+                  Subtotal
+                </TableCell>
                 <TableCell className="text-right text-base font-bold">
                   <PriceDisplay amount={subtotal} emphasize />
                 </TableCell>
@@ -159,7 +194,9 @@ function QuotationDetailPage() {
 
           {data.notes && (
             <div className="mt-6 rounded-lg bg-muted/40 p-4">
-              <p className="text-xs uppercase tracking-wide text-muted-foreground">Notes</p>
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                Notes
+              </p>
               <p className="mt-1 whitespace-pre-wrap text-sm">{data.notes}</p>
             </div>
           )}

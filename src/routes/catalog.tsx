@@ -3,22 +3,46 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import { MoreHorizontal, Package, Pencil, Plus, Search, Trash2 } from "lucide-react";
+import {
+  MoreHorizontal,
+  Package,
+  Pencil,
+  Plus,
+  Search,
+  Trash2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import {
-  Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle,
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
 } from "@/components/ui/sheet";
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -26,10 +50,14 @@ import { PageHeader } from "@/components/shared/PageHeader";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import {
-  useCreateMaterial, useDeleteMaterial, useMaterials, useUpdateMaterial,
+  useCreateMaterial,
+  useDeleteMaterial,
+  useMaterials,
+  useUpdateMaterial,
 } from "@/hooks/useMaterials";
 import {
-  materialSchema, type MaterialFormValues,
+  materialSchema,
+  type MaterialFormValues,
 } from "@/schemas/material.schema";
 import type { Material, MaterialCategory } from "@/types";
 
@@ -40,7 +68,11 @@ export const Route = createFileRoute("/catalog")({
 
 const UNITS = ["kg", "ton", "unit", "meter", "liter", "m2", "m3"] as const;
 const CATEGORIES: MaterialCategory[] = [
-  "raw_material", "component", "consumable", "equipment", "packaging",
+  "raw_material",
+  "component",
+  "consumable",
+  "equipment",
+  "packaging",
 ];
 const CAT_LABEL: Record<MaterialCategory, string> = {
   raw_material: "Raw Material",
@@ -67,8 +99,14 @@ function MaterialCatalogPage() {
     return matchesSearch && matchesCat;
   });
 
-  const openNew = () => { setEditing(null); setOpen(true); };
-  const openEdit = (m: Material) => { setEditing(m); setOpen(true); };
+  const openNew = () => {
+    setEditing(null);
+    setOpen(true);
+  };
+  const openEdit = (m: Material) => {
+    setEditing(m);
+    setOpen(true);
+  };
 
   return (
     <div>
@@ -100,14 +138,18 @@ function MaterialCatalogPage() {
             <SelectContent>
               <SelectItem value="all">All categories</SelectItem>
               {CATEGORIES.map((c) => (
-                <SelectItem key={c} value={c}>{CAT_LABEL[c]}</SelectItem>
+                <SelectItem key={c} value={c}>
+                  {CAT_LABEL[c]}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
 
         {isLoading ? (
-          <p className="py-12 text-center text-sm text-muted-foreground">Loading…</p>
+          <p className="py-12 text-center text-sm text-muted-foreground">
+            Loading…
+          </p>
         ) : filtered.length === 0 ? (
           <EmptyState
             icon={Package}
@@ -139,7 +181,9 @@ function MaterialCatalogPage() {
                   <TableCell>
                     <Badge variant="outline">{CAT_LABEL[m.category]}</Badge>
                   </TableCell>
-                  <TableCell className="text-muted-foreground">{m.unit}</TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {m.unit}
+                  </TableCell>
                   <TableCell className="max-w-xs truncate text-muted-foreground">
                     {m.description ?? "—"}
                   </TableCell>
@@ -197,7 +241,10 @@ function MaterialCatalogPage() {
 }
 
 function MaterialSheet({
-  open, onOpenChange, editing, onSubmit,
+  open,
+  onOpenChange,
+  editing,
+  onSubmit,
 }: {
   open: boolean;
   onOpenChange: (b: boolean) => void;
@@ -225,15 +272,17 @@ function MaterialSheet({
             Define a material that can be quoted and sourced from suppliers.
           </SheetDescription>
         </SheetHeader>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-4 px-4"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 px-4">
           <div className="space-y-2">
             <Label>Name</Label>
-            <Input {...form.register("name")} placeholder="e.g. Steel Pipe 50mm" />
+            <Input
+              {...form.register("name")}
+              placeholder="e.g. Steel Pipe 50mm"
+            />
             {form.formState.errors.name && (
-              <p className="text-xs text-destructive">{form.formState.errors.name.message}</p>
+              <p className="text-xs text-destructive">
+                {form.formState.errors.name.message}
+              </p>
             )}
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -241,11 +290,19 @@ function MaterialSheet({
               <Label>Unit</Label>
               <Select
                 value={form.watch("unit")}
-                onValueChange={(v) => form.setValue("unit", v as MaterialFormValues["unit"])}
+                onValueChange={(v) =>
+                  form.setValue("unit", v as MaterialFormValues["unit"])
+                }
               >
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
                 <SelectContent>
-                  {UNITS.map((u) => <SelectItem key={u} value={u}>{u}</SelectItem>)}
+                  {UNITS.map((u) => (
+                    <SelectItem key={u} value={u}>
+                      {u}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -257,10 +314,14 @@ function MaterialSheet({
                   form.setValue("category", v as MaterialFormValues["category"])
                 }
               >
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
                 <SelectContent>
                   {CATEGORIES.map((c) => (
-                    <SelectItem key={c} value={c}>{CAT_LABEL[c]}</SelectItem>
+                    <SelectItem key={c} value={c}>
+                      {CAT_LABEL[c]}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -271,7 +332,11 @@ function MaterialSheet({
             <Textarea {...form.register("description")} rows={3} />
           </div>
           <SheetFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+            >
               Cancel
             </Button>
             <Button type="submit">{editing ? "Save changes" : "Create"}</Button>

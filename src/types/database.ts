@@ -1,4 +1,11 @@
-export type MaterialUnit = "kg" | "ton" | "unit" | "meter" | "liter" | "m2" | "m3";
+export type MaterialUnit =
+  | "kg"
+  | "ton"
+  | "unit"
+  | "meter"
+  | "liter"
+  | "m2"
+  | "m3";
 export type MaterialCategory =
   | "raw_material"
   | "component"
@@ -6,7 +13,12 @@ export type MaterialCategory =
   | "equipment"
   | "packaging";
 export type OfferStatus = "active" | "expired" | "withdrawn";
-export type QuotationStatus = "draft" | "sent" | "accepted" | "rejected" | "cancelled";
+export type QuotationStatus =
+  | "draft"
+  | "sent"
+  | "accepted"
+  | "rejected"
+  | "cancelled";
 export type IncotermType =
   | "EXW"
   | "FCA"
@@ -34,10 +46,10 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          name: string;
+          name?: string;
           description?: string | null;
-          unit: MaterialUnit;
-          category: MaterialCategory;
+          unit?: MaterialUnit;
+          category?: MaterialCategory;
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["material"]["Insert"]>;
@@ -122,7 +134,9 @@ export interface Database {
           notes?: string | null;
           created_at?: string;
         };
-        Update: Partial<Database["public"]["Tables"]["supplier_offer"]["Insert"]>;
+        Update: Partial<
+          Database["public"]["Tables"]["supplier_offer"]["Insert"]
+        >;
         Relationships: [];
       };
       delivery_rate: {
@@ -144,7 +158,9 @@ export interface Database {
           incoterm?: IncotermType | null;
           notes?: string | null;
         };
-        Update: Partial<Database["public"]["Tables"]["delivery_rate"]["Insert"]>;
+        Update: Partial<
+          Database["public"]["Tables"]["delivery_rate"]["Insert"]
+        >;
         Relationships: [];
       };
       quotation: {
@@ -200,7 +216,9 @@ export interface Database {
           margin_pct: number;
           selection_notes?: string | null;
         };
-        Update: Partial<Database["public"]["Tables"]["quotation_line"]["Insert"]>;
+        Update: Partial<
+          Database["public"]["Tables"]["quotation_line"]["Insert"]
+        >;
         Relationships: [];
       };
     };

@@ -8,14 +8,20 @@ export type Location = Database["public"]["Tables"]["location"]["Row"];
 export type LocationInsert = Database["public"]["Tables"]["location"]["Insert"];
 export type Customer = Database["public"]["Tables"]["customer"]["Row"];
 export type CustomerInsert = Database["public"]["Tables"]["customer"]["Insert"];
-export type SupplierOffer = Database["public"]["Tables"]["supplier_offer"]["Row"];
-export type SupplierOfferInsert = Database["public"]["Tables"]["supplier_offer"]["Insert"];
+export type SupplierOffer =
+  Database["public"]["Tables"]["supplier_offer"]["Row"];
+export type SupplierOfferInsert =
+  Database["public"]["Tables"]["supplier_offer"]["Insert"];
 export type DeliveryRate = Database["public"]["Tables"]["delivery_rate"]["Row"];
-export type DeliveryRateInsert = Database["public"]["Tables"]["delivery_rate"]["Insert"];
+export type DeliveryRateInsert =
+  Database["public"]["Tables"]["delivery_rate"]["Insert"];
 export type Quotation = Database["public"]["Tables"]["quotation"]["Row"];
-export type QuotationInsert = Database["public"]["Tables"]["quotation"]["Insert"];
-export type QuotationLine = Database["public"]["Tables"]["quotation_line"]["Row"];
-export type QuotationLineInsert = Database["public"]["Tables"]["quotation_line"]["Insert"];
+export type QuotationInsert =
+  Database["public"]["Tables"]["quotation"]["Insert"];
+export type QuotationLine =
+  Database["public"]["Tables"]["quotation_line"]["Row"];
+export type QuotationLineInsert =
+  Database["public"]["Tables"]["quotation_line"]["Insert"];
 
 export type {
   MaterialUnit,

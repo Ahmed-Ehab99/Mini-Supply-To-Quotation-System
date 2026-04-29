@@ -45,14 +45,20 @@ export async function getSupplierComparison(
   if (rateErr) throw rateErr;
 
   const rateRows = (rates ?? []) as unknown as RateRow[];
-  const rateMap = new Map<string, RateRow>(rateRows.map((r) => [r.supplier_id, r]));
+  const rateMap = new Map<string, RateRow>(
+    rateRows.map((r) => [r.supplier_id, r]),
+  );
 
   const enriched: SupplierOfferWithDetails[] = rows.map((o) => {
     const rate = rateMap.get(o.supplier_id) ?? null;
     const deliveryCost = rate ? Number(rate.cost_per_unit) : 0;
     return {
       ...o,
-      material: { id: o.material.id, name: o.material.name, unit: o.material.unit as SupplierOfferWithDetails["material"]["unit"] },
+      material: {
+        id: o.material.id,
+        name: o.material.name,
+        unit: o.material.unit as SupplierOfferWithDetails["material"]["unit"],
+      },
       delivery_rate: rate
         ? {
             id: rate.id,
